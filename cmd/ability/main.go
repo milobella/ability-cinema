@@ -2,18 +2,31 @@ package main
 
 import (
     "milobella/abilities/ability-sdk-go/pkg/ability"
-    "milobella/oratio/pkg/anima"
-    "milobella/oratio/pkg/cerebro"
+    "milobella/abilities/cinema-ability/pkg/tools/allocine"
 )
+
+var allocineClient = allocine.NewClient("http://0.0.0.0", 8000)
 
 // fun main()
 func main() {
     server := ability.NewServer(10200)
-    server.RegisterIntent("hello_world", helloWorldHandler)
+    server.RegisterIntent("LAST_SHOWTIME", lastShowTimeHandler)
     server.Serve()
 }
 
-func helloWorldHandler(nlu cerebro.NLU, nlg *anima.NLG) {
-    nlg.Sentence = "Hello {{world}}"
-    nlg.Params = map[string]string{"world": "world"}
+func lastShowTimeHandler(req ability.Request, resp *ability.Response) {
+    result, err := allocineClient.GetLastShowTime("Mouans-Sartoux")
+    if err != nil {
+        resp.Nlg.Sentence = "Error"
+        return
+    }
+
+    theater, _ := result.Path("feed.theaterShowtimes.place.theater.name").Children()
+    location, _ := result.Path("feed.theaterShowtimes.place.theater.city").Children()
+
+    resp.Nlg.Sentence = "Here are the movies in {{theater}} this evening, in the {{location}}'s theater"
+    resp.Nlg.Params = map[string]string{
+        "theater": theater[0].Data().(string),
+        "location": location[0].Data().(string),
+    }
 }

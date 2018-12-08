@@ -1,8 +1,8 @@
 package main
 
 import (
-	"milobella/abilities/ability-sdk-go/pkg/ability"
-	"milobella/abilities/cinema-ability/pkg/tools/allocine"
+	"gitlab.milobella.com/milobella/abilities/ability-sdk-go/pkg/ability"
+	"gitlab.milobella.com/milobella/abilities/cinema-ability/pkg/tools/allocine"
 )
 
 var allocineClient = allocine.NewClient("http://0.0.0.0", 8000)

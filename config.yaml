@@ -1,0 +1,6 @@
+server.port: 4444
+server.log-level: "debug"
+
+tools.allocine:
+  host: "localhost"
+  port: 5555

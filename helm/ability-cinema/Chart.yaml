@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Helm Chart of cinema ability project
+name: ability-cinema
+version: 0.1.0

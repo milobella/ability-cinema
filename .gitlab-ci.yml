@@ -1,0 +1,17 @@
+include:
+  - project: 'milobella/devops/ci-templates'
+    file: '/templates/go-ability.yml'
+
+stages:
+  - build
+  - release
+  - deploy
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  DH_REGISTRY_IMAGE: $DOCKER_USER/$CI_PROJECT_NAME
+  PROJECT_NAME: "milobella"
+  MODULE_NAME: ${CI_PROJECT_NAME}
+  GITLAB_HOST: "gitlab.milobella.com"
+  MODULE_DESCRIPTION: "Milobella ability to know about series & movies."
+  HELM_NAME: "ability-cinema"

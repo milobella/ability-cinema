@@ -86,16 +86,16 @@
   version = "v1.4.0"
 
 [[projects]]
-  branch = "master"
   name = "gitlab.milobella.com/milobella/ability-sdk-go"
   packages = ["pkg/ability"]
   revision = "908a60c34e7df944dc833de7ec00497b0c1fe599"
+  version = "0.2.0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "69e3a3a65b5bed52b8194d33c59d955757d87523"
+  revision = "4c3a928424d249a1013e789cf5e458d480bcba16"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -112,6 +112,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f1c64ced5b76a118957cee5a92163f966237a23b5bd9542f0c73143b67b12531"
+  inputs-digest = "0fefdc695df380ee25e28fd7c0e9c310d74c14b01fd7e0685a5af8e3b6c2fc2f"
   solver-name = "gps-cdcl"
   solver-version = 1

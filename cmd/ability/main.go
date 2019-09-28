@@ -1,8 +1,8 @@
 package main
 
 import (
-	"gitlab.milobella.com/milobella/ability-sdk-go/pkg/ability"
-	"gitlab.milobella.com/milobella/cinema-ability/pkg/tools/allocine"
+	"milobella.com/gitlab/milobella/ability-sdk-go/pkg/ability"
+	"milobella.com/gitlab/milobella/cinema-ability/pkg/tools/allocine"
 	"os"
 
 	"github.com/sirupsen/logrus"

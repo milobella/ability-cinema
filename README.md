@@ -3,18 +3,16 @@ Milobella ability to know about series & movies.
 
 ## Features
 - See what is coming out or soon in your favorite theater;
-- Manage your favorite theater;
+- Manage your favorite theater.
 
 ## Prerequisites
 
-- Having access to [milobella.com/gitlab](https://milobella.com/gitlab/milobella)
 - Having ``golang`` installed [instructions](https://golang.org/doc/install)
 - Having ``go dep`` installed [instructions](https://golang.github.io/dep/docs/installation.html)
 
 ## Build
 
 ```bash
-$ dep ensure
 $ go build -o bin/ability cmd/ability/main.go
 ```
 

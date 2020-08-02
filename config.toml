@@ -1,0 +1,8 @@
+[server]
+port = 4444
+log_level = "<root>=DEBUG"
+
+[tools]
+[tools.allocine]
+host = "0.0.0.0"
+port = 5555

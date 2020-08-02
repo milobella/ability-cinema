@@ -1,32 +1,21 @@
 package main
 
 import (
-	"milobella.com/gitlab/milobella/ability-sdk-go/pkg/ability"
-	"milobella.com/gitlab/milobella/cinema-ability/pkg/tools/allocine"
+	"github.com/milobella/ability-cinema/internal/config"
+	"github.com/milobella/ability-cinema/pkg/tools/allocine"
+	"github.com/milobella/ability-sdk-go/pkg/ability"
 	"os"
 
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 var allocineClient *allocine.Client
-var allocineHost string
-var allocinePort int
 
-var additionalConfigPath string
+//TODO: User location is for now hardly defined but we need to take from the request.
+const userLocation = "Mouans-Sartoux"
 
 //TODO: try to put some common stuff into a separate repository
 func init() {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-
-	additionalConfigPath = os.Getenv("ADDITIONAL_CONFIG_PATH")
-	if len(additionalConfigPath) != 0 {
-		viper.AddConfigPath(additionalConfigPath)
-	}
-
-	viper.AddConfigPath(".")
-	viper.SetDefault("log-level", "info")
 
 	logrus.SetFormatter(&logrus.TextFormatter{})
 
@@ -36,40 +25,35 @@ func init() {
 
 	// TODO: read it in the config when move to viper
 	logrus.SetLevel(logrus.DebugLevel)
-
-	err := viper.ReadInConfig() // Find and read the config file
-	if err != nil { // Handle errors reading the config file
-		logrus.Errorf("Fatal error config file: %s \n", err)
-	}
-
-	if level, err := logrus.ParseLevel(viper.GetString("server.log-level")); err == nil {
-		logrus.SetLevel(level)
-	} else {
-		logrus.Warn("Failed to parse the log level. Keeping the logrus default level.")
-	}
-
-	logrus.Debugf("Configuration -> %+v", viper.AllSettings())
-
-	allocineHost = viper.GetString("tools.allocine.host")
-	allocinePort = viper.GetInt("tools.allocine.port")
 }
 
 // fun main()
 func main() {
+	// Read configuration
+	conf, err := config.ReadConfiguration()
+	if err != nil { // Handle errors reading the config file
+		logrus.WithError(err).Fatalf("Error reading config.")
+	} else {
+		logrus.Infof("The configuration has been successfully ridden.")
+		logrus.Debugf("-> %+v", conf)
+	}
 
 	// Initialize client for allocine tool
-	allocineClient = allocine.NewClient(allocineHost, allocinePort)
+	allocineClient = allocine.NewClient(conf.Tools["allocine"].Host, conf.Tools["allocine"].Port)
 
 	// Initialize server
-	server := ability.NewServer("Cinema Ability", viper.GetInt("server.port"))
+	server := ability.NewServer("Cinema Ability", conf.Server.Port)
 	server.RegisterIntentRule("LAST_SHOWTIME", lastShowTimeHandler)
 	server.Serve()
 }
 
 func lastShowTimeHandler(_ *ability.Request, resp *ability.Response) {
-	result, err := allocineClient.GetLastShowTime("Mouans-Sartoux")
+	result, err := allocineClient.GetLastShowTime(userLocation)
 	if err != nil {
-		resp.Nlg.Sentence = "Error"
+		resp.Nlg.Sentence = "Error retrieving the last shows in theater of {{location}}."
+		resp.Nlg.Params = []ability.NLGParam{
+			{Name: "location", Value: userLocation, Type: "string"},
+		}
 		return
 	}
 
@@ -78,8 +62,8 @@ func lastShowTimeHandler(_ *ability.Request, resp *ability.Response) {
 
 	resp.Nlg.Sentence = "Here are the movies in {{theater}} this evening, in the {{location}}'s theater"
 	resp.Nlg.Params = []ability.NLGParam{
-		{ Name: "theater", Value: theater[0].Data().(string), Type: "string" },
-		{ Name: "location", Value: location[0].Data().(string), Type: "string" },
+		{Name: "theater", Value: theater[0].Data().(string), Type: "string"},
+		{Name: "location", Value: location[0].Data().(string), Type: "string"},
 	}
 
 	showTimesBug, _ := result.Path("feed.theaterShowtimes.movieShowtimes").Children()

@@ -1,12 +1,8 @@
 package main
 
 import (
-	"github.com/milobella/ability-cinema/internal/config"
 	"github.com/milobella/ability-cinema/pkg/tools/allocine"
 	"github.com/milobella/ability-sdk-go/pkg/ability"
-	"os"
-
-	"github.com/sirupsen/logrus"
 )
 
 var allocineClient *allocine.Client
@@ -14,29 +10,10 @@ var allocineClient *allocine.Client
 //TODO: User location is for now hardly defined but we need to take from the request.
 const userLocation = "Mouans-Sartoux"
 
-//TODO: try to put some common stuff into a separate repository
-func init() {
-
-	logrus.SetFormatter(&logrus.TextFormatter{})
-
-	// Output to stdout instead of the default stderr
-	// Can be any io.Writer, see below for File example
-	logrus.SetOutput(os.Stdout)
-
-	// TODO: read it in the config when move to viper
-	logrus.SetLevel(logrus.DebugLevel)
-}
-
 // fun main()
 func main() {
 	// Read configuration
-	conf, err := config.ReadConfiguration()
-	if err != nil { // Handle errors reading the config file
-		logrus.WithError(err).Fatalf("Error reading config.")
-	} else {
-		logrus.Infof("The configuration has been successfully ridden.")
-		logrus.Debugf("-> %+v", conf)
-	}
+	conf := ability.ReadConfiguration()
 
 	// Initialize client for allocine tool
 	allocineClient = allocine.NewClient(conf.Tools["allocine"].Host, conf.Tools["allocine"].Port)

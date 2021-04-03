@@ -26,7 +26,7 @@ jobs:
             --build-arg MODULE_NAME=${GITHUB_REPOSITORY#*-} \
             --build-arg BUILD_VERSION=${IMAGE_TAG} \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
-            --build-arg MODULE_DESCRIPTION="Milobella ability to know about series & movies." \
+            --build-arg MODULE_DESCRIPTION="Milobella Ability to know about series & movies." \
             .
 
       - name: Push tag to docker registry

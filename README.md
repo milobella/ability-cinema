@@ -1,5 +1,5 @@
-# Cinema ability
-Milobella ability to know about series & movies.
+# Cinema Ability
+Milobella Ability to know about series & movies.
 
 ## Features
 - See what is coming out or soon in your favorite theater;
@@ -8,7 +8,6 @@ Milobella ability to know about series & movies.
 ## Prerequisites
 
 - Having ``golang`` installed [instructions](https://golang.org/doc/install)
-- Having ``go dep`` installed [instructions](https://golang.github.io/dep/docs/installation.html)
 
 ## Build
 
@@ -52,7 +51,3 @@ Transfer-Encoding: chunked
 	}, ... ]
 }
 ```
-
-## CHANGELOGS
-- [Application changelog](./CHANGELOG.md)
-- [Helm chart changelog](./helm/ability-cinema/CHANGELOG.md)

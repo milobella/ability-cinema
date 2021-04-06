@@ -31,6 +31,9 @@ func lastShowTimeHandler(_ *ability.Request, resp *ability.Response) {
 		lastShowTimeError(err, resp)
 		return
 	}
+	if logrus.IsLevelEnabled(logrus.DebugLevel) {
+		logrus.Debug(result.String())
+	}
 
 	theater, err := result.Path("feed.theaterShowtimes.place.theater.name").Children()
 	if err != nil {
@@ -43,14 +46,24 @@ func lastShowTimeHandler(_ *ability.Request, resp *ability.Response) {
 		return
 	}
 
+	showTimesBug, err := result.Path("feed.theaterShowtimes.movieShowtimes").Children()
+	if err != nil {
+		lastShowTimeError(err, resp)
+		return
+	}
+	showTimes, err := showTimesBug[0].Children()
+	if err != nil {
+		lastShowTimeError(err, resp)
+		return
+	}
+
 	resp.Nlg.Sentence = "Here are the movies in {{theater}} this evening, in the {{location}}'s theater"
 	resp.Nlg.Params = []ability.NLGParam{
 		{Name: "theater", Value: theater[0].Data().(string), Type: "string"},
 		{Name: "location", Value: location[0].Data().(string), Type: "string"},
 	}
 
-	showTimesBug, _ := result.Path("feed.theaterShowtimes.movieShowtimes").Children()
-	showTimes, _ := showTimesBug[0].Children()
+
 	var visu []allocine.Show
 	for _, show := range showTimes {
 		visu = append(visu, allocine.Show{

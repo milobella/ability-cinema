@@ -51,6 +51,13 @@ func lastShowTimeHandler(_ *ability.Request, resp *ability.Response) {
 		lastShowTimeError(err, resp)
 		return
 	}
+	if len(showTimesBug) <= 0 {
+		resp.Nlg.Sentence = "There is no movie at {{theater}}, the {{location}}'s theater this evening"
+		resp.Nlg.Params = []ability.NLGParam{
+			{Name: "theater", Value: theater[0].Data().(string), Type: "string"},
+			{Name: "location", Value: location[0].Data().(string), Type: "string"},
+		}
+	}
 	showTimes, err := showTimesBug[0].Children()
 	if err != nil {
 		lastShowTimeError(err, resp)

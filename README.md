@@ -26,7 +26,7 @@ $ bin/ability
 #### Get the movies for this evening in favorite theater.
 
 ```bash
-$ curl -i -X POST http://localhost:4444/resolve -d '{"nlu":{"BestIntent": "LAST_SHOWTIME"}}'
+$ curl -i -H "Content-Type":"application/json" -X POST http://localhost:4444/resolve -d '{"nlu":{"BestIntent": "LAST_SHOWTIME"}}'
 HTTP/1.1 200 OK
 Date: Sat, 01 Jun 2019 09:17:16 GMT
 Content-Type: text/plain; charset=utf-8

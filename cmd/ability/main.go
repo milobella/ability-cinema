@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/milobella/ability-cinema/pkg/tools/allocine"
 	"github.com/milobella/ability-sdk-go/pkg/ability"
+	"github.com/sirupsen/logrus"
 )
 
 var allocineClient *allocine.Client
@@ -27,15 +28,20 @@ func main() {
 func lastShowTimeHandler(_ *ability.Request, resp *ability.Response) {
 	result, err := allocineClient.GetLastShowTime(userLocation)
 	if err != nil {
-		resp.Nlg.Sentence = "Error retrieving the last shows in theater of {{location}}."
-		resp.Nlg.Params = []ability.NLGParam{
-			{Name: "location", Value: userLocation, Type: "string"},
-		}
+		lastShowTimeError(err, resp)
 		return
 	}
 
-	theater, _ := result.Path("feed.theaterShowtimes.place.theater.name").Children()
-	location, _ := result.Path("feed.theaterShowtimes.place.theater.city").Children()
+	theater, err := result.Path("feed.theaterShowtimes.place.theater.name").Children()
+	if err != nil {
+		lastShowTimeError(err, resp)
+		return
+	}
+	location, err := result.Path("feed.theaterShowtimes.place.theater.city").Children()
+	if err != nil {
+		lastShowTimeError(err, resp)
+		return
+	}
 
 	resp.Nlg.Sentence = "Here are the movies in {{theater}} this evening, in the {{location}}'s theater"
 	resp.Nlg.Params = []ability.NLGParam{
@@ -53,4 +59,13 @@ func lastShowTimeHandler(_ *ability.Request, resp *ability.Response) {
 		})
 	}
 	resp.Visu = visu
+}
+
+func lastShowTimeError(err error, resp *ability.Response) {
+	logrus.WithError(err).WithField("location", userLocation).Error("An error occurred while handling LAST_SHOWTIME intent.")
+	resp.Nlg.Sentence = "Error retrieving the last shows in theater of {{location}}."
+	resp.Nlg.Params = []ability.NLGParam{
+		{Name: "location", Value: userLocation, Type: "string"},
+	}
+	return
 }

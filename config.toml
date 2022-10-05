@@ -1,6 +1,6 @@
 [server]
 port = 4444
-log_level = "<root>=DEBUG"
+log_level = "INFO"
 
 [tools]
 [tools.allocine]

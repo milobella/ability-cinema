@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/Jeffail/gabs v1.4.0
+	github.com/Jeffail/gabs/v2 v2.6.1
 	github.com/milobella/ability-sdk-go v0.11.0
 	github.com/sirupsen/logrus v1.9.0
 )
